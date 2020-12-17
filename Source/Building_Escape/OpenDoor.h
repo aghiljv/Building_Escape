@@ -29,12 +29,12 @@ class BUILDING_ESCAPE_API UOpenDoor : public UActorComponent
 	float InitialYaw, CurrentYaw;
 	AActor* ActorThatOpens;
 	float DoorLastOpened = 0.0f;
-	float DoorCloseDelay = 0.5f;
 
+	UPROPERTY(EditAnywhere)
+		float DoorCloseDelay = 0.5f;
 	UPROPERTY(EditAnywhere)
 		float TargetYaw;
 	UPROPERTY(EditAnywhere)
 		ATriggerVolume* PressurePlate;
-	/*UPROPERTY(EditAnywhere)
-		AActor* ActorThatOpens;*/
+
 };
