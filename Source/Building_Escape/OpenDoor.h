@@ -23,6 +23,7 @@ class BUILDING_ESCAPE_API UOpenDoor : public UActorComponent
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void OpenDoor(float DeltaTime);
 	void CloseDoor(float DeltaTime);
+	float TotalMassOfActors() const;
 
 
 	private:
@@ -30,6 +31,8 @@ class BUILDING_ESCAPE_API UOpenDoor : public UActorComponent
 	AActor* ActorThatOpens;
 	float DoorLastOpened = 0.0f;
 
+	UPROPERTY(EditAnywhere)
+		float MassToOpenDoors = 50.0f;
 	UPROPERTY(EditAnywhere)
 		float DoorCloseDelay = 0.5f;
 	UPROPERTY(EditAnywhere)

@@ -18,6 +18,8 @@ class BUILDING_ESCAPE_API UGrabber : public UActorComponent
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void Grab();
 	void Release();
+	void FindPhysicsHandle();
+	void SetupInputComponent();
 
 	protected:
 	virtual void BeginPlay() override;
@@ -27,4 +29,7 @@ class BUILDING_ESCAPE_API UGrabber : public UActorComponent
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
 
+	FHitResult GetFirstPhysicsBodyInReach() const;
+	FVector GetPlayersReach() const;
+	FVector GetPlayersWorldPos() const;
 };
