@@ -26,7 +26,10 @@ class BUILDING_ESCAPE_API UGrabber : public UActorComponent
 
 	private:
 	float Reach = 100.0f;
+
+	UPROPERTY()
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	UPROPERTY()
 	UInputComponent* InputComponent = nullptr;
 
 	FHitResult GetFirstPhysicsBodyInReach() const;

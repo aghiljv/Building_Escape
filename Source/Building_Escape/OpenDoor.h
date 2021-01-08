@@ -24,12 +24,15 @@ class BUILDING_ESCAPE_API UOpenDoor : public UActorComponent
 	void OpenDoor(float DeltaTime);
 	void CloseDoor(float DeltaTime);
 	float TotalMassOfActors() const;
+	void  FindAudioComponent();
+	void FindPressurePlate() const;
 
 
 	private:
 	float InitialYaw, CurrentYaw;
-	AActor* ActorThatOpens;
 	float DoorLastOpened = 0.0f;
+	bool OpenDoorSound = false;
+	bool CloseDoorSound = true;
 
 	UPROPERTY(EditAnywhere)
 		float MassToOpenDoors = 50.0f;
@@ -38,6 +41,8 @@ class BUILDING_ESCAPE_API UOpenDoor : public UActorComponent
 	UPROPERTY(EditAnywhere)
 		float TargetYaw;
 	UPROPERTY(EditAnywhere)
-		ATriggerVolume* PressurePlate;
+		ATriggerVolume* PressurePlate = nullptr;
+	UPROPERTY()
+		UAudioComponent* AudioComponent = nullptr;
 
 };

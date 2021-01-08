@@ -2,6 +2,7 @@
 
 
 #include "OpenDoor.h"
+#include "Components/AudioComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
@@ -20,11 +21,8 @@ void UOpenDoor::BeginPlay()
 	InitialYaw = GetOwner()->GetActorRotation().Yaw;
 	TargetYaw += InitialYaw;
 
-	if (!PressurePlate) {
-		UE_LOG(LogTemp, Error, TEXT("%s has the open door on it. But no PressurePlate set."), *GetOwner()->GetName());
-	}
-
-	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
+	FindPressurePlate();
+	FindAudioComponent();
 }
 
 
@@ -49,6 +47,15 @@ void UOpenDoor::OpenDoor(float DeltaTime) {
 	FRotator CurrentRotation(0.f, CurrentYaw, 0.f);
 	CurrentRotation.Yaw = FMath::FInterpTo(CurrentYaw, TargetYaw, DeltaTime, 2.5f);
 	GetOwner()->SetActorRotation(CurrentRotation);
+	CloseDoorSound = false;
+	if (!AudioComponent) {
+		return;
+	}
+	if (!OpenDoorSound) {
+		OpenDoorSound = true;
+		AudioComponent->Play();
+	}
+
 }
 
 void UOpenDoor::CloseDoor(float DeltaTime) {
@@ -56,12 +63,23 @@ void UOpenDoor::CloseDoor(float DeltaTime) {
 	FRotator CurrentRotation(0.f, CurrentYaw, 0.f);
 	CurrentRotation.Yaw = FMath::FInterpTo(CurrentYaw, InitialYaw, DeltaTime, 2.5f);
 	GetOwner()->SetActorRotation(CurrentRotation);
+	OpenDoorSound = false;
+	if (!AudioComponent) {
+		return;
+	}
+	if (!CloseDoorSound) {
+		CloseDoorSound = true;
+		AudioComponent->Play();
+	}
 }
 
 float UOpenDoor::TotalMassOfActors() const {
 	float TotalMass = 0.0f;
 
 	TArray<AActor*> OverlappingActors;
+	if (!PressurePlate) {
+		return TotalMass;
+	}
 	PressurePlate->GetOverlappingActors(OverlappingActors);
 
 	for (AActor* OverlapActor : OverlappingActors) {
@@ -69,4 +87,18 @@ float UOpenDoor::TotalMassOfActors() const {
 	}
 
 	return TotalMass;
+}
+
+void UOpenDoor::FindAudioComponent() {
+	AudioComponent = GetOwner()->FindComponentByClass<UAudioComponent>();
+	if (!AudioComponent) {
+		UE_LOG(LogTemp, Error, TEXT("%s Missing Audio component!"), *GetOwner()->GetName());
+	}
+}
+
+void UOpenDoor::FindPressurePlate() const
+{
+	if (!PressurePlate) {
+		UE_LOG(LogTemp, Error, TEXT("%s has the open door on it. But no PressurePlate set."), *GetOwner()->GetName());
+	}
 }
